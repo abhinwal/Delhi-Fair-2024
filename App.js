@@ -1,4 +1,4 @@
-
+import 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,8 +12,8 @@ import FairFacilitiesScreen from './src/FairFacilitiesScreen';
 import HallLayoutsScreen from './src/HallLayoutsScreen';
 import EventsScreen from './src/EventsScreen';
 
-
 const Stack = createNativeStackNavigator();
+
 const App = () => {
   return (
     <NavigationContainer>
@@ -29,7 +29,7 @@ const App = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 export default App;
 
