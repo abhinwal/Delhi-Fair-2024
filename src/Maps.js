@@ -6,7 +6,7 @@ import BackButtonIcon from './assets/backbutton.png'; // Import the back button 
 import HallLayout1 from './assets/halllayouts1.jpeg'; // Import the first hall layout image
 import HallLayout2 from './assets/halllayouts2.jpeg'; // Import the second hall layout image
 
-const HallLayoutsScreen = () => {
+const Maps = () => {
   const navigation = useNavigation();
 
   return (
@@ -81,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HallLayoutsScreen;
+export default Maps;

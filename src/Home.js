@@ -87,7 +87,7 @@ export default function Home() {
 
         <TouchableOpacity
           onPress={() => {
-            // handle link
+            navigation.navigate('Landing');
           }}
           style={{ marginTop: 'auto' }}>
           <Text style={styles.formFooter}>

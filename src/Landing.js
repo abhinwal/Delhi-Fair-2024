@@ -1,8 +1,7 @@
-// src/Landing.js
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Linking } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Linking, BackHandler } from 'react-native';
 import CountDown from 'react-native-countdown-component';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const Landing = () => {
   const navigation = useNavigation();
@@ -14,90 +13,138 @@ const Landing = () => {
     Linking.openURL('https://www.ihgfdelhifair.in/register.php');
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('Home');
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [navigation])
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/menu.png' }} style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>IHGF DELHI FAIR 2024</Text>
-        <TouchableOpacity>
-          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/search.png' }} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.partitionLine} />
-
-      <View style={styles.imageRow}>
-        <View style={styles.imageContainer}>
-          <Image source={require('./assets/image1.jpg')} style={styles.rowImage} />
-          <Text style={styles.imageText}>Furniture & Accessories</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity>
+            <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/menu.png' }} style={styles.icon} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>IHGF DELHI FAIR 2024</Text>
+          <TouchableOpacity>
+            <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/search.png' }} style={styles.icon} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.imageContainer}>
-          <Image source={require('./assets/image2.jpg')} style={styles.rowImage} />
-          <Text style={styles.imageText}>Christmas & Decorations</Text>
+
+        <View style={styles.partitionLine} />
+
+        <View style={styles.imageRow}>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate('FurnitureAndAccessories')}>
+            <Image source={require('./assets/furniture.png')} style={styles.rowImage} />
+            <Text style={styles.imageText}>Furniture & Accessories</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate('ChristmasAndDecorations')}>
+            <Image source={require('./assets/christmas.png')} style={styles.rowImage} />
+            <Text style={styles.imageText}>Christmas & Decorations</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate('GardenAndAccessories')}>
+            <Image source={require('./assets/garden.png')} style={styles.rowImage} />
+            <Text style={styles.imageText}>Garden & Accessories</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate('GiftWrapsAndRibbons')}>
+            <Image source={require('./assets/gift.png')} style={styles.rowImage} />
+            <Text style={styles.imageText}>Gift Wraps & Ribbons</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.imageContainer}>
-          <Image source={require('./assets/image3.jpg')} style={styles.rowImage} />
-          <Text style={styles.imageText}>Garden & Accessories</Text>
+
+        <Image source={require('./assets/carousel1.jpg')} style={styles.mainImage} />
+
+        <View style={styles.infoSection}>
+          <Text style={styles.infoTitle}>Pre Register</Text>
+          <Text style={styles.infoSubtitle}>58th IHGF Delhi Fair Autumn 2024</Text>
+          <Text style={styles.infoDescription}>
+            India Expo Centre & Mart, Greater Noida, Delhi-NCR{'\n'}
+            16th - 20th October 2024
+          </Text>
+          <TouchableOpacity style={styles.registerButton} onPress={handleRegisterPress}>
+            <Text style={styles.registerButtonText}>Register Here</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.imageContainer}>
-          <Image source={require('./assets/image4.jpg')} style={styles.rowImage} />
-          <Text style={styles.imageText}>Gift Wraps & Ribbons</Text>
+
+        <View style={styles.countdownContainer}>
+          <CountDown
+            until={timeRemaining}
+            onFinish={() => alert('The event has started!')}
+            size={30}
+            digitStyle={{ backgroundColor: '#fff' }}
+            digitTxtStyle={{ color: '#000' }}
+            timeLabelStyle={{ color: '#fff', fontWeight: 'bold' }}
+            separatorStyle={{ color: '#fff' }}
+            timeToShow={['D', 'H', 'M', 'S']}
+            timeLabels={{ d: 'Days', h: 'Hours', m: 'Minutes', s: 'Seconds' }}
+            showSeparator
+          />
         </View>
-      </View>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ExhibitorsScreen')}>
+            <Image source={require('./assets/exhibitors.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>Exhibitors</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('FairFacilitiesScreen')}>
+            <Image source={require('./assets/fair.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>Fair Facilities</Text>
+          </TouchableOpacity>
+        </View>
 
-      <Image source={require('./assets/carousel1.jpg')} style={styles.mainImage} />
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('HallLayoutsScreen')}>
+            <Image source={require('./assets/halll.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>Hall Layouts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EventsScreen')}>
+            <Image source={require('./assets/events.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>Events</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.infoSection}>
-        <Text style={styles.infoTitle}>Pre Register</Text>
-        <Text style={styles.infoSubtitle}>58th IHGF Delhi Fair Autumn 2024</Text>
-        <Text style={styles.infoDescription}>
-          India Expo Centre & Mart, Greater Noida, Delhi-NCR{'\n'}
-          16th - 20th October 2024
-        </Text>
-        <TouchableOpacity style={styles.registerButton} onPress={handleRegisterPress}>
-          <Text style={styles.registerButtonText}>Register Here</Text>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ContactUs')}>
+            <Image source={require('./assets/contact.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>Contact Us</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('AboutUs')}>
+            <Image source={require('./assets/delhifair.png')} style={styles.buttonImage} />
+            <Text style={styles.buttonText}>About Us</Text>
+          </TouchableOpacity>
+        </View>
+
+        
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Enquiry')}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/info.png' }} style={styles.footerIcon} />
+          <Text style={styles.footerButtonText}>Enquiry</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Maps')}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/map.png' }} style={styles.footerIcon} />
+          <Text style={styles.footerButtonText}>Maps</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Settings')}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/settings.png' }} style={styles.footerIcon} />
+          <Text style={styles.footerButtonText}>Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-glyphs/30/FFFFFF/share.png' }} style={styles.footerIcon} />
+          <Text style={styles.footerButtonText}>Share</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.countdownContainer}>
-        <CountDown
-          until={timeRemaining}
-          onFinish={() => alert('The event has started!')}
-          size={30}
-          digitStyle={{backgroundColor: '#fff'}}
-          digitTxtStyle={{color: '#000'}}
-          timeLabelStyle={{color: '#fff', fontWeight: 'bold'}}
-          separatorStyle={{color: '#fff'}}
-          timeToShow={['D', 'H', 'M', 'S']}
-          timeLabels={{d: 'Days', h: 'Hours', m: 'Minutes', s: 'Seconds'}}
-          showSeparator
-        />
-      </View>
-
-      <View style={styles.bottomImageRow}>
-        <TouchableOpacity style={styles.bottomImageContainer} onPress={() => navigation.navigate('ExhibitorsScreen')}>
-          <Image source={require('./assets/image1.jpg')} style={styles.bottomRowImage} />
-          <Text style={styles.bottomImageText}>Exhibitors</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomImageContainer} onPress={() => navigation.navigate('FairFacilitiesScreen')}>
-          <Image source={require('./assets/image2.jpg')} style={styles.bottomRowImage} />
-          <Text style={styles.bottomImageText}>Fair Facilities</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.bottomImageRow}>
-        <TouchableOpacity style={styles.bottomImageContainer} onPress={() => navigation.navigate('HallLayoutsScreen')}>
-          <Image source={require('./assets/image3.jpg')} style={styles.bottomRowImage} />
-          <Text style={styles.bottomImageText}>Hall Layouts</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomImageContainer} onPress={() => navigation.navigate('EventsScreen')}>
-          <Image source={require('./assets/image4.jpg')} style={styles.bottomRowImage} />
-          <Text style={styles.bottomImageText}>Events</Text>
-        </TouchableOpacity>
-      </View>
-
-    </ScrollView>
+    </View>
   );
 };
 
@@ -105,6 +152,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  scrollContainer: {
+    paddingBottom: 100, // Extra padding to accommodate footer
   },
   header: {
     flexDirection: 'row',
@@ -197,10 +247,10 @@ const styles = StyleSheet.create({
   bottomImageContainer: {
     alignItems: 'center',
     width: Dimensions.get('window').width / 2.2, // Adjust width to account for margin
-    marginHorizontal: 8, // Add margin between images
+    marginHorizontal: 5, // Add margin between images
   },
   bottomRowImage: {
-    width: '100%',
+    width: '40%',
     height: 80,
     borderRadius: 10,
   },
@@ -210,7 +260,53 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 10,
+    backgroundColor: '#000',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    borderTopWidth: 1,
+    borderTopColor: '#fff',
+  },
+  footerButton: {
+    alignItems: 'center',
+  },
+  footerIcon: {
+    width: 24,
+    height: 24,
+  },
+  footerButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  buttonContainer: {
+    width: '45%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  buttonImage: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+  buttonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+    paddingHorizontal: 16,
+  },
 });
 
 export default Landing;
-
